@@ -1,30 +1,34 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Neues Seminar erstellen</h1>
+    <div class="container py-5">
+        <h1 class="mb-4">Neues Seminar erstellen</h1>
 
-    {% for message in app.flashes('success') %}
-        <div>{{ message }}</div>
-    {% endfor %}
-
-    {{ form_start(form) }}
-        {{ form_row(form.title) }}
-        {{ form_row(form.description) }}
-        {{ form_row(form.startDate) }}
-        {{ form_row(form.endDate) }}
-        {{ form_row(form.registrationDeadline) }}
-        {{ form_row(form.maxParticipants) }}
-
-        <h2>Sessions</h2>
-
-        {% for sessionForm in form.sessions %}
-            <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #ccc;">
-                {{ form_row(sessionForm.title) }}
-                {{ form_row(sessionForm.startsAt) }}
-                {{ form_row(sessionForm.endsAt) }}
-            </div>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
         {% endfor %}
 
-        <button type="submit">Speichern</button>
-    {{ form_end(form) }}
+        {{ form_start(form) }}
+
+            {{ form_row(form.title) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.startDate) }}
+            {{ form_row(form.endDate) }}
+            {{ form_row(form.registrationDeadline) }}
+            {{ form_row(form.maxParticipants) }}
+
+            <h2 class="mt-5 mb-3">Sessions</h2>
+
+            {% for sessionForm in form.sessions %}
+                <div class="card mb-3 p-3">
+                    {{ form_row(sessionForm.title) }}
+                    {{ form_row(sessionForm.startsAt) }}
+                    {{ form_row(sessionForm.endsAt) }}
+                </div>
+            {% endfor %}
+
+            <button class="btn btn-primary">Speichern</button>
+
+        {{ form_end(form) }}
+    </div>
 {% endblock %}
