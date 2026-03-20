@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ seminar.title }}{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="mx-auto" style="max-width: 900px;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">{{ seminar.title }}</h1>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Allgemeine Informationen</h2>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-muted small">Start</div>
+                                <div>{{ seminar.startDate|date('d.m.Y H:i') }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-muted small">Ende</div>
+                                <div>{{ seminar.endDate|date('d.m.Y H:i') }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-muted small">Anmeldeschluss</div>
+                                <div>{{ seminar.registrationDeadline|date('d.m.Y H:i') }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-muted small">Max. Teilnehmer</div>
+                                <div>{{ seminar.maxParticipants }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="border rounded p-3">
+                                <div class="text-muted small">Beschreibung</div>
+                                <div class="mt-1">{{ seminar.description|nl2br }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Organisator</h2>
+
+                    <div class="border rounded p-3">
+                        {{ seminar.organizer.email }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Sessions</h2>
+
+                    {% if seminar.sessions is empty %}
+                        <p class="text-muted mb-0">Noch keine Sessions vorhanden.</p>
+                    {% else %}
+                        <div class="list-group list-group-flush">
+                            {% for session in seminar.sessions %}
+                                <div class="list-group-item px-0">
+                                    <div class="fw-semibold">
+                                        {{ session.title }}
+                                    </div>
+                                    {% if session.startsAt is defined and session.endsAt is defined %}
+                                        <div class="text-muted small">
+                                            {{ session.startsAt|date('d.m.Y H:i') }} - {{ session.endsAt|date('H:i') }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Anmeldungen</h2>
+
+                    <div class="mb-2">
+                        <span class="fw-semibold">{{ seminar.registrations|length }}</span>
+                        / {{ seminar.maxParticipants }} Plätze belegt
+                    </div>
+
+                    {% if seminar.registrations is empty %}
+                        <p class="text-muted mb-0">Bisher keine Anmeldungen.</p>
+                    {% else %}
+                        <ul class="mb-0">
+                            {% for registration in seminar.registrations %}
+                                <li>
+                                    {# anpassen je nach Registration/User-Struktur #}
+                                    {{ registration.user.email ?? 'Teilnehmer' }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

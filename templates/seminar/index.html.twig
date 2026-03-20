@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Seminare{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="mx-auto" style="max-width: 1000px;">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">Seminare</h1>
+
+                <a href="{{ path('seminar_new') }}" class="btn btn-primary">
+                    + Neues Seminar
+                </a>
+            </div>
+
+            {% if seminars is empty %}
+                <div class="alert alert-light border">
+                    Keine Seminare vorhanden.
+                </div>
+            {% else %}
+                <div class="card shadow-sm border-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Titel</th>
+                                    <th>Start</th>
+                                    <th>Ende</th>
+                                    <th>Anmeldeschluss</th>
+                                    <th>Teilnehmer</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for seminar in seminars %}
+                                    <tr>
+                                        <td>
+                                            <div class="fw-semibold">
+                                                {{ seminar.title }}
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            {{ seminar.startDate|date('d.m.Y H:i') }}
+                                        </td>
+
+                                        <td>
+                                            {{ seminar.endDate|date('d.m.Y H:i') }}
+                                        </td>
+
+                                        <td>
+                                            {{ seminar.registrationDeadline|date('d.m.Y H:i') }}
+                                        </td>
+
+                                        <td>
+                                            <span class="badge bg-light text-dark border">
+                                                {{ seminar.registrations|length }} / {{ seminar.maxParticipants }}
+                                            </span>
+                                        </td>
+
+                                        <td class="text-end">
+                                            <a href="{{ path('seminar_show', { id: seminar.id }) }}"
+                                               class="btn btn-sm btn-outline-primary">
+                                                Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}

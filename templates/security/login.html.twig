@@ -7,10 +7,13 @@
     <div>{{ error.messageKey }}</div>
 {% endif %}
 
-<form method="post">
-    <input type="email" name="_username" value="{{ last_username }}" placeholder="Email" required>
-    <input type="password" name="_password" placeholder="Password" required>
+<div class="container py-4">
+    <form method="post">
+        <input type="email" name="_username" value="{{ last_username }}" placeholder="Email" required>
+        <input type="password" name="_password" placeholder="Password" required>
 
-    <button type="submit">Login</button>
-</form>
+        <button type="submit">Login</button>
+    </form>
+</div>
+
 {% endblock %}
