@@ -48,5 +48,25 @@ class SeminarCreateDto
                 ->atPath('registrationDeadline')
                 ->addViolation();
         }
+
+        if ($this->startDate && $this->endDate) {
+            foreach ($this->sessions as $index => $session) {
+                if (!$session instanceof SessionInputDto) {
+                    continue;
+                }
+
+                if ($session->startsAt && $session->startsAt < $this->startDate) {
+                    $context->buildViolation('Die Session darf nicht vor dem Seminarbeginn starten.')
+                        ->atPath(sprintf('sessions[%d].startsAt', $index))
+                        ->addViolation();
+                }
+
+                if ($session->endsAt && $session->endsAt > $this->endDate) {
+                    $context->buildViolation('Die Session darf nicht nach dem Seminarende enden.')
+                        ->atPath(sprintf('sessions[%d].endsAt', $index))
+                        ->addViolation();
+                }
+            }
+        }
     }
 }
