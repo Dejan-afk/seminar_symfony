@@ -18,17 +18,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[ORM\JoinColumn(nullable: false)]
     private string $email;
 
     #[ORM\Column]
-    #[ORM\JoinColumn(nullable: false)]
     private string $password;
 
     #[ORM\Column]
     private array $roles = [];
 
-    #[ORM\OneToMany(mappedBy: 'organizer', targetEntity: Seminar::class)]
+    #[ORM\OneToMany(mappedBy: 'organizer', targetEntity: Seminar::class, cascade: ['persist', 'remove'])]
     private Collection $organizedSeminars;
 
     public function __construct()

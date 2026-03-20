@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\SeminarType;
 use App\Service\SeminarCreator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -46,5 +47,27 @@ class SeminarController extends AbstractController
     public function show(int $id): Response
     {
         return new Response(sprintf('Seminar details for seminar with ID: %d', $id));
+    }
+
+    private function debug(Request $request, SeminarCreateDto $dto, FormInterface $form): void
+    {
+
+        //debugging
+        $errors = [];
+        foreach ($form->getErrors(true) as $error) {
+            $errors[] = [
+                'message' => $error->getMessage(),
+                'origin' => $error->getOrigin()?->getName(),
+            ];
+        }
+
+        dd([
+            'submitted' => $form->isSubmitted(),
+            'valid' => $form->isValid(),
+            'request_data' => $request->request->all(),
+            'dto' => $dto,
+            'errors' => $errors,
+        ]);
+        //
     }
 }
