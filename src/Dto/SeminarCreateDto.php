@@ -3,6 +3,7 @@
 namespace App\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SeminarCreateDto
 {
@@ -32,4 +33,20 @@ class SeminarCreateDto
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Mindestens eine Session ist erforderlich.')]
     public array $sessions = [];
+
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context): void
+    {
+        if ($this->startDate && $this->endDate && $this->startDate >= $this->endDate) {
+            $context->buildViolation('Das Startdatum muss vor dem Enddatum liegen.')
+                ->atPath('startDate')
+                ->addViolation();
+        }
+
+        if ($this->registrationDeadline && $this->startDate && $this->registrationDeadline > $this->startDate) {
+            $context->buildViolation('Die Anmeldefrist muss vor dem Startdatum liegen.')
+                ->atPath('registrationDeadline')
+                ->addViolation();
+        }
+    }
 }

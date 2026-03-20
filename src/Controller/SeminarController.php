@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Dto\SeminarCreateDto;
 use App\Dto\SessionInputDto;
+use App\Entity\Seminar;
 use App\Entity\User;
 use App\Form\SeminarType;
+use App\Repository\SeminarRepository;
 use App\Service\SeminarCreator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -16,8 +18,31 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/seminars')]
 class SeminarController extends AbstractController
 {
-    #[Route('/new', name: 'seminar_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, SeminarCreator $seminarCreator): Response
+
+    #[Route('/', name: 'seminar_index', methods: ['GET'])]
+    public function index(SeminarRepository $seminarRepository): Response
+    {
+        $seminars = $seminarRepository->findAll();
+        return $this->render('seminar/index.html.twig', [
+            'seminars' => $seminars,
+        ]);
+    }
+
+    #[Route('/new', name: 'seminar_new', methods: ['GET'])]
+    public function new(): Response
+    {
+        $dto = new SeminarCreateDto();
+        $dto->sessions[] = new SessionInputDto();
+
+        $form = $this->createForm(SeminarType::class, $dto);
+
+        return $this->render('seminar/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/', name: 'seminar_create', methods: ['POST'])]
+    public function create(Request $request, SeminarCreator $seminarCreator): Response
     {
         $dto = new SeminarCreateDto();
         $dto->sessions[] = new SessionInputDto();
@@ -35,7 +60,9 @@ class SeminarController extends AbstractController
 
             $this->addFlash('success', 'Seminar created successfully!');
 
-            return $this->redirectToRoute('seminar_show', ['id' => $seminar->getId()]);
+            return $this->redirectToRoute('seminar_show', [
+                'id' => $seminar->getId()
+            ]);
         }
 
         return $this->render('seminar/new.html.twig', [
@@ -44,9 +71,11 @@ class SeminarController extends AbstractController
     }
 
     #[Route('/{id}', name: 'seminar_show', methods: ['GET'])]
-    public function show(int $id): Response
+    public function show(Seminar $seminar): Response
     {
-        return new Response(sprintf('Seminar details for seminar with ID: %d', $id));
+        return $this->render('seminar/show.html.twig', [
+            'seminar' => $seminar,
+        ]);
     }
 
     private function debug(Request $request, SeminarCreateDto $dto, FormInterface $form): void
