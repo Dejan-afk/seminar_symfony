@@ -1,5 +1,21 @@
 {% extends 'base.html.twig' %}
 
+{% set sessionPrototype %}
+    <div class="session-row card mb-3 p-3">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                {{ form_row(form.sessions.vars.prototype.title) }}
+            </div>
+            <div class="col-md-4">
+                {{ form_row(form.sessions.vars.prototype.startsAt) }}
+            </div>
+            <div class="col-md-4">
+                {{ form_row(form.sessions.vars.prototype.endsAt) }}
+            </div>
+        </div>
+    </div>
+{% endset %}
+
 {% block body %}
     <div class="container py-5">
         
@@ -26,17 +42,53 @@
 
             <h2 class="mt-5 mb-3">Sessions</h2>
 
-            {% for sessionForm in form.sessions %}
-                <div class="card mb-3 p-3">
+            <div
+                id="sessions-collection"
+                data-index="{{ form.sessions|length }}"
+                data-prototype="{{ sessionPrototype|e('html_attr') }}"
+            >
+                {% for sessionForm in form.sessions %}
+                    <div class="session-row card mb-3 p-3">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-4">
+                                {{ form_row(sessionForm.title) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_row(sessionForm.startsAt) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_row(sessionForm.endsAt) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
 
-                    {{ form_row(sessionForm.title) }}
-                    {{ form_row(sessionForm.startsAt) }}
-                    {{ form_row(sessionForm.endsAt) }}
-                </div>
-            {% endfor %}
+            <button type="button" id="add-session" class="btn btn-outline-secondary">
+                +
+            </button>
 
             <button class="btn btn-primary">Speichern</button>
 
         {{ form_end(form) }}
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const collection = document.getElementById('sessions-collection');
+        const addButton = document.getElementById('add-session');
+
+        if (!collection || !addButton) {
+            return;
+        }
+
+        addButton.addEventListener('click', () => {
+            const index = collection.dataset.index;
+            const prototype = collection.dataset.prototype;
+            const newForm = prototype.replace(/__name__/g, index);
+
+            collection.insertAdjacentHTML('beforeend', newForm);
+            collection.dataset.index = Number(index) + 1;
+        });
+    });
+</script>
 {% endblock %}
