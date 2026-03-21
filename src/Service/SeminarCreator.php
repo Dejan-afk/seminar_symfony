@@ -34,7 +34,6 @@ class SeminarCreator
             $session->setTitle($sessionDto->title);
             $session->setStartsAt($sessionDto->startsAt);
             $session->setEndsAt($sessionDto->endsAt);
-            $session->setSeminar($seminar);
 
             $seminar->addSession($session);
         }
