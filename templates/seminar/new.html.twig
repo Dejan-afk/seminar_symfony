@@ -2,7 +2,14 @@
 
 {% block body %}
     <div class="container py-5">
-        <h1 class="mb-4">Neues Seminar erstellen</h1>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-4">Neues Seminar erstellen</h1>
+            <a href="{{ path('seminar_index')}}"
+                class="btn btn-sm btn-outline-primary">
+                Zurück
+            </a>
+        </div>
 
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">{{ message }}</div>
