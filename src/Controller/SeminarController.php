@@ -9,6 +9,8 @@ use App\Entity\User;
 use App\Form\SeminarType;
 use App\Repository\SeminarRepository;
 use App\Service\SeminarCreator;
+use App\Service\SeminarDeleter;
+use App\Security\Voter\SeminarVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,6 +68,23 @@ class SeminarController extends AbstractController
         return $this->render('seminar/show.html.twig', [
             'seminar' => $seminar,
         ]);
+    }
+
+    #[Route('/{id}', name: 'seminar_delete', methods: ['POST'])]
+    public function delete(Request $request, Seminar $seminar, SeminarDeleter $seminarDeleter): Response
+    {
+        // CSRF-Token validieren
+        if (!$this->isCsrfTokenValid('delete_seminar_' . $seminar->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        $this->denyAccessUnlessGranted(SeminarVoter::DELETE, $seminar);
+
+        $seminarDeleter->delete($seminar);
+
+        $this->addFlash('success', 'Seminar deleted successfully!');
+
+        return $this->redirectToRoute('seminar_index');
     }
 
     private function debug(Request $request, SeminarCreateDto $dto, FormInterface $form): void

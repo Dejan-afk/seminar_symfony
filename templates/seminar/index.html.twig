@@ -60,10 +60,16 @@
                                         </td>
 
                                         <td class="text-end">
-                                            <a href="{{ path('seminar_show', { id: seminar.id }) }}"
-                                               class="btn btn-sm btn-outline-primary">
-                                                Details
-                                            </a>
+                                            
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <a href="{{ path('seminar_show', { id: seminar.id }) }}" class="btn btn-sm btn-outline-primary">
+                                                    Details
+                                                </a>
+                                                <form method="post" action="{{ path('seminar_delete', {id: seminar.id}) }}" onsubmit="return confirm('Wirklich löschen?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_seminar_' ~ seminar.id) }}">
+                                                    <button class="btn btn-danger">Löschen</button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 {% endfor %}
