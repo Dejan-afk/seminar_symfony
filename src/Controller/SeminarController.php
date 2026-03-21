@@ -39,8 +39,6 @@ class SeminarController extends AbstractController
         $form = $this->createForm(SeminarType::class, $dto);
         $form->handleRequest($request);
 
-        $this->debug($request, $dto, $form);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
 
