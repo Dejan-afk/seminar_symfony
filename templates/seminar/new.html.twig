@@ -8,8 +8,6 @@
             <div class="alert alert-success">{{ message }}</div>
         {% endfor %}
 
-        {{ form_errors(form) }}
-
         {{ form_start(form) }}
 
             {{ form_row(form.title) }}
@@ -23,7 +21,6 @@
 
             {% for sessionForm in form.sessions %}
                 <div class="card mb-3 p-3">
-                    {{ form_errors(sessionForm) }}
 
                     {{ form_row(sessionForm.title) }}
                     {{ form_row(sessionForm.startsAt) }}

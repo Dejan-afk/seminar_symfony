@@ -28,30 +28,22 @@ class SeminarController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'seminar_new', methods: ['GET'])]
-    public function new(): Response
-    {
-        $dto = new SeminarCreateDto();
-        $dto->sessions[] = new SessionInputDto();
-
-        $form = $this->createForm(SeminarType::class, $dto);
-
-        return $this->render('seminar/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
-    #[Route('/', name: 'seminar_create', methods: ['POST'])]
-    public function create(Request $request, SeminarCreator $seminarCreator): Response
-    {
+    #[Route('/new', name: 'seminar_new', methods: ['GET', 'POST'])]
+    public function new(
+        Request $request,
+        SeminarCreator $seminarCreator
+    ): Response {
         $dto = new SeminarCreateDto();
         $dto->sessions[] = new SessionInputDto();
 
         $form = $this->createForm(SeminarType::class, $dto);
         $form->handleRequest($request);
 
+        $this->debug($request, $dto, $form);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
+
             if (!$user instanceof User) {
                 throw $this->createAccessDeniedException('You must be logged in to create a seminar.');
             }
@@ -61,12 +53,12 @@ class SeminarController extends AbstractController
             $this->addFlash('success', 'Seminar created successfully!');
 
             return $this->redirectToRoute('seminar_show', [
-                'id' => $seminar->getId()
+                'id' => $seminar->getId(),
             ]);
         }
 
         return $this->render('seminar/new.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form
         ]);
     }
 
