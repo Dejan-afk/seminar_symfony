@@ -62,7 +62,7 @@
                                         <td class="text-end">
                                             
                                             <div class="d-flex justify-content-center align-items-center">
-                                                <a href="{{ path('seminar_show', { id: seminar.id }) }}" class="btn btn-sm btn-outline-primary">
+                                                <a href="{{ path('seminar_show', { id: seminar.id }) }}" class="btn  btn-outline-primary m-2">
                                                     Details
                                                 </a>
                                                 <form method="post" action="{{ path('seminar_delete', {id: seminar.id}) }}" onsubmit="return confirm('Wirklich löschen?');">

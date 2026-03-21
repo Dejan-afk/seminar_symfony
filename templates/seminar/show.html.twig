@@ -7,10 +7,19 @@
         <div class="mx-auto" style="max-width: 900px;">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="mb-0">{{ seminar.title }}</h1>
-                <a href="{{ path('seminar_index')}}"
-                    class="btn btn-sm btn-outline-primary">
-                    Zurück
-                </a>
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ path('seminar_edit', { id: seminar.id } )}}"
+                        class="btn btn-sm btn-outline-secondary m-2"
+                    >
+                        Bearbeiten
+                    </a>
+                    <a href="{{ path('seminar_index')}}" 
+                        class="btn btn-sm btn-outline-primary"
+                    >
+                        Zurück
+                    </a>
+                </div>
+                
             </div>
 
             <div class="card shadow-sm border-0 mb-4">

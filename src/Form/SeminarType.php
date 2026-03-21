@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Dto\SeminarCreateDto;
+use App\Entity\Seminar;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -47,5 +48,7 @@ class SeminarType extends AbstractType
             'data_class' => SeminarCreateDto::class,
             'csrf_protection' => true,
         ]);
+
+        $resolver->setAllowedTypes('data_class', ['null', 'string']);
     }
 }

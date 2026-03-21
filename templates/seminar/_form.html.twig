@@ -1,0 +1,63 @@
+{{ form_start(form) }}
+
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.startDate) }}
+    {{ form_row(form.endDate) }}
+    {{ form_row(form.registrationDeadline) }}
+    {{ form_row(form.maxParticipants) }}
+
+    <h2 class="mt-5 mb-3">Sessions</h2>
+
+    <div
+        id="sessions-collection"
+        data-index="{{ form.sessions|length }}"
+        data-prototype="{{ include('seminar/_session_prototype.html.twig', {
+            prototype: form.sessions.vars.prototype
+        })|e('html_attr') }}"
+    >
+        {% for sessionForm in form.sessions %}
+            <div class="session-row border rounded p-3 mb-3">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        {{ form_row(sessionForm.title) }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form_row(sessionForm.startsAt) }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form_row(sessionForm.endsAt) }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <button type="button" id="add-session" class="btn btn-outline-secondary mb-4">
+        + Session hinzufügen
+    </button>
+
+    <div class="mt-3">
+        <button class="btn btn-primary">{{ button_label|default('Speichern') }}</button>
+    </div>
+
+{{ form_end(form) }}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const collection = document.getElementById('sessions-collection');
+        const addButton = document.getElementById('add-session');
+
+        if (!collection || !addButton) {
+            return;
+        }
+
+        addButton.addEventListener('click', () => {
+            const index = collection.dataset.index;
+            const prototype = collection.dataset.prototype;
+            const newForm = prototype.replace(/__name__/g, index);
+
+            collection.insertAdjacentHTML('beforeend', newForm);
+            collection.dataset.index = Number(index) + 1;
+        });
+    });
+</script>

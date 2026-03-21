@@ -7,10 +7,13 @@ use App\Dto\SessionInputDto;
 use App\Entity\Seminar;
 use App\Entity\User;
 use App\Form\SeminarType;
+use App\Mapper\SeminarUpdateDtoMapper;
 use App\Repository\SeminarRepository;
 use App\Service\SeminarCreator;
 use App\Service\SeminarDeleter;
 use App\Security\Voter\SeminarVoter;
+use App\Service\SeminarUpdater;
+use App\Dto\SeminarUpdateDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,6 +70,34 @@ class SeminarController extends AbstractController
     {
         return $this->render('seminar/show.html.twig', [
             'seminar' => $seminar,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'seminar_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Seminar $seminar, SeminarUpdater $seminarUpdater, SeminarUpdateDtoMapper $dtoMapper): Response
+    {
+        $this->denyAccessUnlessGranted(SeminarVoter::EDIT, $seminar);
+
+        $dto = $dtoMapper->mapEntityToDto($seminar);
+        
+        $form = $this->createForm(SeminarType::class, $dto, [
+            'data_class' => SeminarUpdateDto::class,
+        ]);
+        $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $seminarUpdater->update($seminar, $dto);
+    
+                $this->addFlash('success', 'Seminar updated successfully!');
+    
+                return $this->redirectToRoute('seminar_show', [
+                    'id' => $seminar->getId(),
+                ]);
+            }
+
+        return $this->render('seminar/edit.html.twig', [
+            'seminar' => $seminar,
+            'form' => $form,
         ]);
     }
 

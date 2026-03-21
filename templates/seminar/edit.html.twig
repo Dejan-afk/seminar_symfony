@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container py-5">
+        <h1 class="mb-4">Seminar bearbeiten</h1>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+        <div class="mb-3 text-muted">
+            Du bearbeitest: <strong>{{ seminar.title }}</strong>
+        </div>
+
+        {{ include('seminar/_form.html.twig', {
+            form: form,
+            button_label: 'Änderungen speichern'
+        }) }}
+
+        <div class="mt-3">
+            <a href="{{ path('seminar_show', { id: seminar.id }) }}" class="btn btn-link">
+                Zurück zum Seminar
+            </a>
+        </div>
+    </div>
+{% endblock %}
